@@ -1,11 +1,10 @@
 import pgzrun
-import pygame
 
 WIDTH = 600
 HEIGHT = 400
 
 
-pygame.event.get()
+
 TITLE = 'Super Clicker'
 FPS = 30
 fon = Actor('fon')
@@ -15,7 +14,7 @@ bonus_2 = Actor("bonus", (100, 200))
 win = Actor("win")
 button_menu = Actor("bonus", (300, 300))
 button_back = Actor("bonus", (300, 350))
-count = 10000000
+count = 0
 price1 = 15
 price2 = 200
 bonus_damage = 0
@@ -63,7 +62,8 @@ def draw():
         screen.draw.text('20 coin every 2 sec', center=(100, 180), color='black', fontsize=30)
         screen.draw.text(f'{price1} coin', center=(100, 110), color='black', fontsize=30)
         screen.draw.text(f'{price2} coin', center=(100, 210), color='black', fontsize=30)
-
+        button_quit.draw()
+        screen.draw.text('QUIT', center=(300, 350), color='black', fontsize=36)
         if hp > 0:
             enemy.draw()
             screen.draw.text(f'{hp}', center=(400, 130), color="#DC143C", fontsize=30, background="#FFE4B5")
@@ -87,8 +87,8 @@ def draw():
             screen.draw.text("You Kill All Enemy", color="black", fontsize=36, center=(300, 100))
             button_menu.draw()
             screen.draw.text("Return to Menu", color="black", fontsize=36, center=(300, 300))
-        button_quit.draw()
-        screen.draw.text('QUIT', center=(300, 350), color='black', fontsize=36)
+            mode = 'back'
+
 
 def on_mouse_down(button, pos):
     global count
@@ -99,38 +99,36 @@ def on_mouse_down(button, pos):
     global bonus_give
     global bonus_damage
     global mode
-    global HEIGHT
-    global WIDTH
     if button == mouse.LEFT:
-        if button_play.collidepoint(pos):
+        if button_play.collidepoint(pos) and mode == 'menu':
             mode = 'game'
             hp = 100
-            count = 10000000
+            count = 999999999999990
             bonus_give = 0
             bonus_damage = 0
             price1 = 15
             price2 = 200
             enemy.image = 'enemy'
-        elif button_quit.collidepoint(pos):
+        elif button_quit.collidepoint(pos) and mode == 'game':
             mode = 'menu'
-        elif button_gallery.collidepoint(pos):
+        elif button_gallery.collidepoint(pos) and mode == 'menu':
             mode = 'gallery'
-        elif button_back.collidepoint(pos):
+        elif button_back.collidepoint(pos) and mode == 'gallery':
             mode = "menu"
-        elif button_menu.collidepoint(pos):
+        elif button_menu.collidepoint(pos) and mode == 'back':
             mode = 'menu'
 
-        elif enemy.collidepoint(pos) and hp != 0:
+        elif enemy.collidepoint(pos) and hp != 0 and mode == 'game':
             count += 1
             hp -= damage
             enemy.y = 200
             animate(enemy, tween='bounce_end', duration=0.5, y=230)
-        elif bonus_1.collidepoint(pos) and count >= price1:
+        elif bonus_1.collidepoint(pos) and count >= price1  and mode == 'game' and bonus_damage != 50:
             clock.schedule_interval(bonus1, 2)
             count -= price1
             price1 *= 2
             bonus_damage += 1
-        elif bonus_2.collidepoint(pos) and count >= price2:
+        elif bonus_2.collidepoint(pos) and count >= price2  and mode == 'game' and bonus_give != 20:
             clock.schedule_interval(bonus1, 2)
             count -= price2
             price2 *= 2
