@@ -14,7 +14,7 @@ bonus_2 = Actor("bonus", (100, 200))
 win = Actor("win")
 button_menu = Actor("bonus", (300, 300))
 button_back = Actor("bonus", (300, 350))
-count = 0
+coin = 0
 price1 = 15
 price2 = 200
 bonus_damage = 0
@@ -56,7 +56,7 @@ def draw():
         screen.draw.text("Back", color="black", fontsize=36, center=(300, 350))
     elif mode == 'game':
         fon.draw()
-        screen.draw.text(f'coin:{count}', center=(550, 30), color="black", fontsize=30)
+        screen.draw.text(f'coin:{coin}', center=(550, 30), color="black", fontsize=30)
         bonus_1.draw()
         bonus_2.draw()
         screen.draw.text('1 dam every 2 sec', center=(100, 80), color='black', fontsize=30)
@@ -92,7 +92,7 @@ def draw():
 
 
 def on_mouse_down(button, pos):
-    global count
+    global coin
     global damage
     global hp
     global price1
@@ -104,24 +104,24 @@ def on_mouse_down(button, pos):
         if button_play.collidepoint(pos) and mode == 'menu':
             mode = 'game'
             hp = 100
-            count = 0
+            coin = 0
             bonus_give = 20
             bonus_damage = 1
             price1 = 15
             price2 = 200
             enemy.image = 'enemy'
         elif enemy.collidepoint(pos) and hp != 0 and mode == 'game':
-            count += 1
+            coin += 1
             hp -= damage
             enemy.y = 200
             animate(enemy, tween='bounce_end', duration=0.5, y=230)
-        elif bonus_1.collidepoint(pos) and count >= price1  and mode == 'game' and bonus_damage != 50:
+        elif bonus_1.collidepoint(pos) and coin >= price1  and mode == 'game' and bonus_damage != 50:
             clock.schedule_interval(bonus1, 2)
-            count -= price1
+            coin -= price1
             price1 *= 2
-        elif bonus_2.collidepoint(pos) and count >= price2  and mode == 'game' and bonus_give != 20:
+        elif bonus_2.collidepoint(pos) and coin >= price2  and mode == 'game' and bonus_give != 20:
             clock.schedule_interval(bonus1, 2)
-            count -= price2
+            coin -= price2
             price2 *= 2
         elif button_quit.collidepoint(pos) and mode == 'game':
             mode = 'menu'
@@ -137,15 +137,15 @@ def on_mouse_down(button, pos):
 
 def bonus1():
     global hp
-    global count
+    global coin
     if hp > 0:
         hp -= bonus_damage
-        count += 1
+        coin += 1
 
 
 def bonus2():
-    global count
-    count += bonus_give
+    global coin
+    coin += bonus_give
 
 
 pgzrun.go()
