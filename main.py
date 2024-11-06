@@ -44,6 +44,7 @@ def draw():
 
 
     elif mode == 'gallery':
+        screen.fill("black")
         win.draw()
         enemy_gallery1.draw()
         enemy_gallery2.draw()
@@ -55,7 +56,7 @@ def draw():
         screen.draw.text("Back", color="black", fontsize=36, center=(300, 350))
     elif mode == 'game':
         fon.draw()
-        screen.draw.text(f'coin:{count}', center=(570, 30), color="black", fontsize=30)
+        screen.draw.text(f'coin:{count}', center=(550, 30), color="black", fontsize=30)
         bonus_1.draw()
         bonus_2.draw()
         screen.draw.text('1 dam every 2 sec', center=(100, 80), color='black', fontsize=30)
@@ -103,21 +104,12 @@ def on_mouse_down(button, pos):
         if button_play.collidepoint(pos) and mode == 'menu':
             mode = 'game'
             hp = 100
-            count = 999999999999990
-            bonus_give = 0
-            bonus_damage = 0
+            count = 0
+            bonus_give = 20
+            bonus_damage = 1
             price1 = 15
             price2 = 200
             enemy.image = 'enemy'
-        elif button_quit.collidepoint(pos) and mode == 'game':
-            mode = 'menu'
-        elif button_gallery.collidepoint(pos) and mode == 'menu':
-            mode = 'gallery'
-        elif button_back.collidepoint(pos) and mode == 'gallery':
-            mode = "menu"
-        elif button_menu.collidepoint(pos) and mode == 'back':
-            mode = 'menu'
-
         elif enemy.collidepoint(pos) and hp != 0 and mode == 'game':
             count += 1
             hp -= damage
@@ -127,12 +119,20 @@ def on_mouse_down(button, pos):
             clock.schedule_interval(bonus1, 2)
             count -= price1
             price1 *= 2
-            bonus_damage += 1
         elif bonus_2.collidepoint(pos) and count >= price2  and mode == 'game' and bonus_give != 20:
             clock.schedule_interval(bonus1, 2)
             count -= price2
             price2 *= 2
-            bonus_give += 20
+        elif button_quit.collidepoint(pos) and mode == 'game':
+            mode = 'menu'
+        elif button_gallery.collidepoint(pos) and mode == 'menu':
+            mode = 'gallery'
+        elif button_back.collidepoint(pos) and mode == 'gallery':
+            mode = "menu"
+        elif button_menu.collidepoint(pos) and mode == 'back':
+            mode = 'menu'
+
+
 
 
 def bonus1():
